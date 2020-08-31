@@ -1,0 +1,90 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: snakemake-workflows general alignment configuration
+
+properties:
+  # paths to store results
+  trimmed_dir:
+    description: directory where to store the workflow trimmed fastqs (defaults inside the result dir)
+    default: fastq_trimmed
+    type: string
+  qc_dir:
+    description: directory where to store the workflow quality controls (defaults inside the result dir)
+    default: qc
+    type: string
+  dedup_dir:
+    description: directory where to store the workflow deduplicated alignment (defaults inside the result dir)
+    default: dedup
+    type: string
+
+
+  # trim_galore parameters
+  trim_galore:
+    description: trim_galore settings (note that the adapter is autodetected, so you do not have to set it here)
+    default: --quality 10 --length 20 --consider_already_trimmed 10
+    type: string
+
+  # replicate handling
+  combine_replicates:
+    description: which method to use to combine replicates (concatenation, idr or fisher)
+    default: merge # for technical replicates
+    enum: [fisher, idr, merge]
+    type: string
+
+  # aligner
+  aligner:
+    description: which aligner to use
+    properties:
+      bowtie2:
+        properties:
+          index:
+            default: ''
+          align:
+            default: ''
+        default:
+          index: ''
+          align: ''
+      bwa:
+        properties:
+          index:
+            default: '-a bwtsw'
+          align:
+            default: '-M'
+        default:
+          index: '-a bwtsw'
+          align: '-M'
+      hisat2:
+        properties:
+          index:
+            default: ''
+          align:
+            default: ''
+        default:
+          index: ''
+          align: ''
+      star:
+        properties:
+          index:
+            default: '--limitGenomeGenerateRAM 37000000000 --genomeSAsparseD 1'
+          align:
+            default: '--readFilesCommand gunzip -c'
+        default:
+          index: '--limitGenomeGenerateRAM 37000000000 --genomeSAsparseD 1'
+          align: '--readFilesCommand gunzip -c'
+    default:
+      bwa:
+        index: '-a bwtsw'
+        align: ''
+
+
+  # samtools index
+  samtools_index:
+    description: samtools index settings
+    default: ''
+    type: string
+
+  # picard markduplicates
+  markduplicates:
+    description: the parameters of picard markduplicates
+    default: REMOVE_DUPLICATES=false -Xms4G -Xmx6G MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=999
+    type: string

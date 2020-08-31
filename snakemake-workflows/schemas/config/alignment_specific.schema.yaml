@@ -1,0 +1,17 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: snakemake-workflows alignment configuration
+
+properties:
+  bam_sorter:
+    description: which sorting software to use
+    type: object
+#    enum: [sambamba, samtools]
+    properties:
+      description: sort order of aligned reads
+      default: coordinate
+      enum: [queryname, coordinate]
+      type: string
+    default:
+      samtools:
+        coordinate
